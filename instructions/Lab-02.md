@@ -119,26 +119,26 @@ dotnet run
 
 앱에서 다음 출력을 생성합니다.
 
-```text
-Querying AdventureWorks database
-SELECT COUNT(*) FROM production.vproductanddescription
-1764
+    ```text
+    Querying AdventureWorks database
+    SELECT COUNT(*) FROM product
+    504
 
-SELECT COUNT(*) FROM purchasing.vendor
-104
+    SELECT COUNT(*) FROM vendor
+    104
 
-SELECT COUNT(*) FROM sales.specialoffer
-16
+    SELECT COUNT(*) FROM specialoffer
+    16
 
-SELECT COUNT(*) FROM sales.salesorderheader
-31465
+    SELECT COUNT(*) FROM salesorderheader
+    31465
 
-SELECT COUNT(*) FROM sales.salesorderdetail
-121317
+    SELECT COUNT(*) FROM salesorderdetail
+    121317
 
-SELECT COUNT(*) FROM person.person
-19972
-```
+    SELECT COUNT(*) FROM customer
+    19185
+    ```
 
 ### 태스크 3: Azure 가상 머신으로 데이터베이스를 전송하는 오프라인 마이그레이션 수행
 
@@ -208,10 +208,10 @@ SELECT COUNT(*) FROM specialoffer;
 
 이 쿼리가 행 16개(온-프레미스 데이터베이스의 행 수)를 반환하는지 확인합니다.
 
-1. *sales.vendor* 테이블의 행 수를 쿼리합니다.
+1. *vendor* 테이블의 행 수를 쿼리합니다.
 
 ```SQL
-SELECT COUNT(*) FROM sales.vendor;
+    SELECT COUNT(*) FROM vendor;
 ```
 
 이 테이블에는 행 104개가 포함되어 있어야 합니다.
@@ -230,9 +230,9 @@ SELECT COUNT(*) FROM sales.vendor;
     | 사용자 이름 | azureuser |
     | 기본 스키마 | adventureworks |
 
-1. **암호** 에 **Pa55w.rd** 를 입력하고 **확인** 을 클릭합니다.
+1. 암호 프롬프트에서 **Pa55w.rd**를 입력하고 **확인**을 클릭합니다.
 1. **확인**, **닫기** 를 차례로 클릭합니다.
-1. **Azure의 MySQL** 을 클릭합니다.
+1. **데이터베이스** 메뉴에서 **데이터베이스에 연결**을 클릭하고 **Azure의 MySQL**을 선택한 다음 **확인**을 클릭합니다.
 1. **adventureworks** 에서 데이터베이스의 테이블을 찾아봅니다. 테이블이 온-프레미스 데이터베이스의 테이블과 같아야 합니다.
 
 ### 태스크 5: Azure 가상 머신의 데이터베이스용으로 샘플 애플리케이션 다시 구성 및 테스트
@@ -569,17 +569,17 @@ SELECT * FROM salesorderdetail WHERE salesorderid IN (43659, 43660, 43661);
 
 ### 태스크 7: Azure Database for MySQL의 데이터베이스용으로 샘플 애플리케이션 다시 구성 및 테스트
 
-1. **터미널** 창으로 돌아옵니다.
-1. *code/mysql/AdventureWorksQueries* 폴더로 이동합니다.
+1. **LON-DEV-01** 가상 머신의 **터미널** 창으로 돌아갑니다.
+1. *workshop/migration_samples/code/mysql/AdventureWorksQueries* 폴더로 이동합니다.
 
 ```bash
-cd code/mysql/AdventureWorksQueries
+cd ~/workshop/migration_samples/code/mysql/AdventureWorksQueries
 ```
 
 1. 코드 편집기에서 App.config 파일을 엽니다.
 
 ```bash
-code App.config
+nano App.config
 ```
 
 1. **ConnectionString** 설정의 값을 변경하여 Azure 가상 머신의 IP 주소를 **adventureworks[nnn].MySQL.database.azure.com** 으로 바꿉니다. **User Id** 는 **awadmin@adventureworks[nnn]** 으로 변경합니다. **Password** 는 **Pa55w.rdDemo** 로 변경합니다. 파일 내용이 다음과 같아야 합니다.
@@ -588,12 +588,12 @@ code App.config
 <?xml version="1.0" encoding="utf-8" ?>
     <configuration>
       <appSettings>
-        <add key="ConnectionString" value="Server=adventureworks[nnn].MySQL.database.azure.com;Database=adventureworks;Port=3306;User Id=awadmin@adventureworks[nnn];Password=Pa55w.rdDemo" />
+        <add key="ConnectionString" value="Server=adventureworks[nnn].MySQL.database.azure.com;database=adventureworks;port=3306;uid=awadmin@adventureworks[nnn];password=Pa55w.rdDemo" />
       </appSettings>
     </configuration>
 ```
 
-이제 애플리케이션이 Azure 가상 머신에서 실행되는 데이터베이스에 연결됩니다.
+이제 애플리케이션이 Azure Database for MySQL에서 실행되는 데이터베이스에 연결됩니다.
 
 1. 파일을 저장하고 편집기를 닫습니다.
 
@@ -602,5 +602,5 @@ code App.config
 ```bash
 dotnet run
 ```
-
+앱이 이전과 동일한 결과를 표시합니다. 하지만 이제는 Azure에서 실행되는 데이터베이스에서 데이터를 검색합니다.
 지금까지 Azure Database for MySQL로 데이터베이스를 마이그레이션하고 새 데이터베이스를 사용하도록 애플리케이션을 다시 구성했습니다.
